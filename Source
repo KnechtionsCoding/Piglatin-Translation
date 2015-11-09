@@ -1,0 +1,112 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <stdio.h>
+#include <ctype.h>
+#include <sstream>
+
+
+using namespace std;
+vector <string> piglatin_translation(vector <string> &non_piglatin, string &word_buff)
+{
+	char firstLetter;
+	vector<string> piglatin;
+	firstLetter = word_buff.at(0);
+
+	if (firstLetter == 'a' || firstLetter == 'e' || firstLetter == 'i' || firstLetter == 'o' || firstLetter == 'u')
+	{
+		string piglatin_word = word_buff + "ay";
+		piglatin.push_back(piglatin_word);
+	}
+	else
+	{
+		/*//find first instance of consonant and then take everything before that and add it to the end of the word.
+		int n;
+
+		 n = word_buff.find_first_not_of("aeiouAEIOU"); //this part needs to be redone.
+		
+		for (int i = 0; i <= n; i++)
+		{
+			word_buff = word_buff + word_buff[i];
+			word_buff.erase(i);
+			cout << word_buff;
+		}
+		*/
+		
+	};
+	return piglatin;
+}
+
+void print_test(vector<string> &non_piglatin)
+{
+	for (int i = 0; i < non_piglatin.size(); i++)
+	{
+		cout << non_piglatin[i] << endl;
+
+	}
+	system("pause>null");
+}
+
+void user_phrase(bool &run)
+{
+	string user_input;
+	int word_counter = 0;
+	vector<string> non_piglatin;
+	vector<string> piglatin;
+	/* each word seperated by a space is saved in the order it was typed
+	and added to the vector: inputs */
+	cout << "Please enter your first phrase: ";
+
+	while (run == true)
+	{
+		
+		getline(cin, user_input);
+
+		if (user_input != "opstay")
+		{
+			string word_buff;
+			stringstream ssUser_input(user_input);
+
+
+			while (ssUser_input >> word_buff)
+			{
+				piglatin_translation(non_piglatin, word_buff);
+			}
+
+			cout << "Please enter your next phrase: ";
+
+		}
+
+		if (user_input == "opstay")
+		{
+			run = false;
+			print_test(non_piglatin);
+
+			
+		}
+
+	}
+
+}
+
+void checking_the_phrase()
+{
+	// isupper move through vector then use isupper to check if they are upper case then assign the index value, rearrange then uppercase the same index value.
+
+	//same thing for punctuation. Check and move on. ispunct
+	;
+}
+
+int main()
+{
+	bool run = true;
+	while (run == true)
+	{
+		user_phrase(run);
+		
+	}
+}
