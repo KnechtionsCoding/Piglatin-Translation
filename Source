@@ -9,43 +9,112 @@
 #include <ctype.h>
 #include <sstream>
 
-
 using namespace std;
-vector <string> piglatin_translation(vector <string> &non_piglatin, string &word_buff)
+
+bool check_vowel(char &firstLetter)
 {
-	char firstLetter;
-	vector<string> piglatin;
-	firstLetter = word_buff.at(0);
+	bool test;
 
 	if (firstLetter == 'a' || firstLetter == 'e' || firstLetter == 'i' || firstLetter == 'o' || firstLetter == 'u')
 	{
-		string piglatin_word = word_buff + "ay";
-		piglatin.push_back(piglatin_word);
+		test = true;
 	}
-	else
-	{
-		/*//find first instance of consonant and then take everything before that and add it to the end of the word.
-		int n;
+	else if (firstLetter != 'a' || firstLetter != 'e' || firstLetter != 'i' || firstLetter != 'o' || firstLetter != 'u')
 
-		 n = word_buff.find_first_not_of("aeiouAEIOU"); //this part needs to be redone.
-		
-		for (int i = 0; i <= n; i++)
+	{
+		test = false;
+	}
+
+	return test;
+}
+
+void vowel_translation( string &word_buff)
+{
+	word_buff.append("ay");
+}
+
+vector <string> piglatin_translation(vector <string> &piglatin, string &word_buff)
+{
+	char firstLetter;
+	firstLetter = word_buff.at(0);
+	const string vowels = "aeiouAEIOU";
+	bool should_we = check_vowel(firstLetter);
+
+	// need to add in the punctuation part of this assignment here so that it pulls out the punctuation before it adds the "ay"
+	if (ispunct(word_buff.at(0)))
+	{
+		piglatin.push_back(word_buff);
+	}
+
+	else if (should_we == true)
+	{
+		if (isupper(word_buff.at(0)))
 		{
-			word_buff = word_buff + word_buff[i];
-			word_buff.erase(i);
-			cout << word_buff;
+			tolower(word_buff.at(0));
+			vowel_translation(word_buff);
+			toupper(word_buff.at(0));
+			piglatin.push_back(word_buff);
 		}
-		*/
 		
-	};
+	}
+	else if (should_we == false)
+	{
+		//assign the found vowel from the beginning to a substring, then append the substring to the end add ay and then delete the first part.
+		//find first instance of consonant and then take everything before that and add it to the end of the word.
+		int n;
+		string appending;
+		n = word_buff.find_first_of(vowels);
+
+		if (n > 0) // anything but the first one is a consonant
+		{
+			if (isupper(word_buff.at(0)))
+			{
+				tolower(word_buff.at(0));
+				appending = word_buff.substr(0, n);
+				word_buff = word_buff.append(appending);
+				word_buff = word_buff.append("ay");
+				word_buff = word_buff.erase(0, n);
+				toupper(word_buff.at(0));
+			}
+		}
+
+		else if (n == 0) //starts with a consonant
+		{
+			if (isupper(word_buff.at(0)))
+			{
+				string first;
+				stringstream consonants;
+				consonants << firstLetter;
+				consonants >> first;
+				tolower(word_buff.at(0));
+				word_buff = word_buff.append(first);
+				word_buff = word_buff.append("ay");
+				word_buff = word_buff.erase(word_buff.at(0));
+				toupper(word_buff.at(0));
+			}
+		}
+
+		else if (n == -1) //no vowels at all
+		{
+			if (isupper(word_buff.at(0)))
+			{
+				tolower(word_buff.at(0));
+				word_buff = word_buff.append("ay");
+				toupper(word_buff.at(0));
+			}
+		}
+
+		piglatin.push_back(word_buff);
+		
+	}
 	return piglatin;
 }
 
-void print_test(vector<string> &non_piglatin)
+void print_translation(vector<string> &piglatin)
 {
-	for (int i = 0; i < non_piglatin.size(); i++)
+	for (int i = 0; i < piglatin.size(); i++)
 	{
-		cout << non_piglatin[i] << endl;
+		cout << piglatin[i] << " ";
 
 	}
 	system("pause>null");
@@ -55,7 +124,6 @@ void user_phrase(bool &run)
 {
 	string user_input;
 	int word_counter = 0;
-	vector<string> non_piglatin;
 	vector<string> piglatin;
 	/* each word seperated by a space is saved in the order it was typed
 	and added to the vector: inputs */
@@ -74,7 +142,7 @@ void user_phrase(bool &run)
 
 			while (ssUser_input >> word_buff)
 			{
-				piglatin_translation(non_piglatin, word_buff);
+				piglatin_translation(piglatin, word_buff);
 			}
 
 			cout << "Please enter your next phrase: ";
@@ -84,7 +152,9 @@ void user_phrase(bool &run)
 		if (user_input == "opstay")
 		{
 			run = false;
-			print_test(non_piglatin);
+			
+			print_translation(piglatin);
+			system("pause>null");
 
 			
 		}
