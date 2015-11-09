@@ -50,6 +50,11 @@ vector <string> piglatin_translation(vector <string> &piglatin, string &word_buf
 	{
 		if (isupper(word_buff.at(0)))
 		{
+			for (int i = 0; i < word_buff.size(); i++)
+			{
+				//test if it is punctuation
+				;
+			}
 			tolower(word_buff.at(0));
 			vowel_translation(word_buff);
 			toupper(word_buff.at(0));
@@ -69,6 +74,11 @@ vector <string> piglatin_translation(vector <string> &piglatin, string &word_buf
 		{
 			if (isupper(word_buff.at(0)))
 			{
+				for (int i = 0; i < word_buff.size(); i++)
+				{
+					//test if it is punctuation
+					;
+				}
 				tolower(word_buff.at(0));
 				appending = word_buff.substr(0, n);
 				word_buff = word_buff.append(appending);
@@ -82,6 +92,11 @@ vector <string> piglatin_translation(vector <string> &piglatin, string &word_buf
 		{
 			if (isupper(word_buff.at(0)))
 			{
+				for (int i = 0; i < word_buff.size(); i++)
+				{
+					//test if it is punctuation
+					;
+				}
 				string first;
 				stringstream consonants;
 				consonants << firstLetter;
@@ -98,6 +113,11 @@ vector <string> piglatin_translation(vector <string> &piglatin, string &word_buf
 		{
 			if (isupper(word_buff.at(0)))
 			{
+				for (int i = 0; i < word_buff.size(); i++)
+				{
+					//test if it is punctuation
+					;
+				}
 				tolower(word_buff.at(0));
 				word_buff = word_buff.append("ay");
 				toupper(word_buff.at(0));
