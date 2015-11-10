@@ -34,18 +34,25 @@ void starts_consonant(string &word_buff, char &firstLetter)
 	stringstream consonants;
 	consonants << firstLetter;
 	consonants >> first;
-	
+
 	word_buff = word_buff.append(first);
 	word_buff = word_buff.append("ay");
 	word_buff = word_buff.erase(word_buff.at(0));
-	
+
 }
 
-void no_vowels_or_start_vowels (string &word_buff)
+void no_vowels_or_start_vowels(string &word_buff)
 {
 
-	word_buff = word_buff.append("ay");
+	word_buff = word_buff+ "ay";
 
+}
+
+void uppercase_vowels(string &word_buff)
+{
+	word_buff.at(0) = tolower(word_buff.at(0));
+	no_vowels_or_start_vowels(word_buff);
+	word_buff.at(0) = toupper(word_buff.at(0));
 }
 
 void has_vowels(string &word_buff, int &n)
@@ -59,26 +66,27 @@ void has_vowels(string &word_buff, int &n)
 
 void uppercase_start(string &word_buff, int &n)
 {
-	tolower(word_buff.at(0));
+	word_buff.at(0) = tolower(word_buff.at(0));
 	has_vowels(word_buff, n);
-	toupper(word_buff.at(0));
+	word_buff.at(0) = toupper(word_buff.at(0));
 }
-void punctuation_upper(string &word_buff,int &n)
+
+void punctuation_upper(string &word_buff, int &n)
 {
 	string lastLetter;
-	lastLetter = word_buff.back();
-	word_buff.erase(word_buff.back());
+	lastLetter = word_buff.at(word_buff.length()-1);
+	word_buff = word_buff.erase(word_buff.length()-1);
 	uppercase_start(word_buff, n);
-	word_buff.append(lastLetter);
+	word_buff = word_buff.append(lastLetter);
 }
 
 void punctuation_lower(string &word_buff, int &n)
 {
 	string lastLetter;
-	lastLetter = word_buff.back();
-	word_buff.erase(word_buff.back());
+	lastLetter = word_buff.at(word_buff.length() - 1);
+	word_buff = word_buff.erase(word_buff.length() - 1);
 	has_vowels(word_buff, n);
-	word_buff.append(lastLetter);
+	word_buff = word_buff.append(lastLetter);
 }
 
 vector <string> piglatin_translation(vector <string> &piglatin, string &word_buff)
@@ -89,133 +97,140 @@ vector <string> piglatin_translation(vector <string> &piglatin, string &word_buf
 	const string vowels = "aeiouAEIOU";
 	bool should_we = check_vowel(firstLetter);
 
-	// need to add in the punctuation part of this assignment here so that it pulls out the punctuation before it adds the "ay"
-	if (ispunct(word_buff.at(0)))
+	
+	if (ispunct(word_buff.at(0))) // This checks to see if it is only punctuation and will break the program if the punctuation is at the start as in "Testing
 	{
 		piglatin.push_back(word_buff);
 	}
 
-	else if (should_we == true)
+	/*if (ispunct(word_buff.at(0)) ) //&& (word_buff.length() > 1))
 	{
-		if (isupper(word_buff.at(0)))
+		string punctuation;
+		punctuation = word_buff.at(0);
+		word_buff = word_buff.erase(word_buff.at(0));
+	*/	
+		if (should_we == true) //Is the first letter a vowel?
 		{
-			for (int i = 0; i < word_buff.size(); i++)
+			if (isupper(word_buff.at(0)))
 			{
-				//test if it is punctuation
-				;
+				uppercase_vowels(word_buff);
+				
 			}
-			tolower(word_buff.at(0));
-			no_vowels_or_start_vowels(word_buff);
-			toupper(word_buff.at(0));
+			else if (islower(word_buff.at(0)))
+			{
+				no_vowels_or_start_vowels(word_buff);
+		
+			}
 			piglatin.push_back(word_buff);
 		}
-		
-	}
-	else if (should_we == false)
-	{
-		//assign the found vowel from the beginning to a substring, then append the substring to the end add ay and then delete the first part.
-		//find first instance of consonant and then take everything before that and add it to the end of the word.
-		int n;
-		n = word_buff.find_first_of(vowels);
-
-		if (n > 0) // anything but the first one is a consonant
+		else if (should_we == false)
 		{
-			if (isupper(word_buff.at(0)))
-			{
-				if (ispunct(word_buff.back()))
-				{
-					punctuation_upper(word_buff, n);
-				}
-				else
-				{
-					uppercase_start(word_buff, n);
-				}
-			}
-			else if (islower(word_buff.at(0)))
-			{
-				if (ispunct(word_buff.back()))
-				{
-					punctuation_lower(word_buff, n);
-				}
-				else
-				{
-					has_vowels(word_buff, n);
-				}
-			}
-			else
-			{
-				cout << "Error! 1";
-			}
-		}
-		
-		else if (n == 0) //starts with a consonant
-		{
-			if (isupper(word_buff.at(0)))
-			{
-				if (ispunct(word_buff.back()))
-				{
-					punctuation_upper(word_buff, n);
-				}
-				else
-				{
-					uppercase_start(word_buff, n);
-				}
-			}
-			else if (islower(word_buff.at(0)))
-			{
-				if (ispunct(word_buff.back()))
-				{
-					punctuation_lower(word_buff, n);
-				}
-				else
-				{
-					starts_consonant(word_buff, firstLetter);
-				}
-			}
-			else
-			{
-				cout << "Error! 2";
-			}
-		}
+			//assign the found vowel from the beginning to a substring, then append the substring to the end add ay and then delete the first part.
+			//find first instance of consonant and then take everything before that and add it to the end of the word.
+			int n;
+			n = word_buff.find_first_of(vowels);
 
-		else if (n == -1) //no vowels at all
-		{
-			if (isupper(word_buff.at(0)))
+			if (n > 0) // anything but the first letter is a consonant
 			{
-				if (ispunct(word_buff.back()))
+				if (isupper(word_buff.at(0)))
 				{
-					punctuation_upper(word_buff, n);
+					if (ispunct(word_buff.back()) || ispunct(word_buff.at(0)))
+					{
+						punctuation_upper(word_buff, n);
+					}
+					else
+					{
+						uppercase_start(word_buff, n);
+					}
+				}
+				else if (islower(word_buff.at(0)))
+				{
+					if (ispunct(word_buff.back()))
+					{
+						punctuation_lower(word_buff, n);
+					}
+					else
+					{
+						has_vowels(word_buff, n);
+					}
 				}
 				else
 				{
-					uppercase_start(word_buff, n);
+					cout << "Error! 1";
 				}
 			}
-			else if (islower(word_buff.at(0)))
-			{
-				if (ispunct(word_buff.back()))
-				{
-					punctuation_lower(word_buff, n);
-				}
-				else
-				{
-					no_vowels_or_start_vowels(word_buff);
-				}
-			}
-			else
-			{
-				cout << "Error! 3";
-			}
-		}
 
+			else if (n == 0) //starts with a consonant
+			{
+				if (isupper(word_buff.at(0)))
+				{
+					if (ispunct(word_buff.back()))
+					{
+						punctuation_upper(word_buff, n);
+					}
+					else
+					{
+						uppercase_start(word_buff, n);
+					}
+				}
+				else if (islower(word_buff.at(0)))
+				{
+					if (ispunct(word_buff.back()))
+					{
+						punctuation_lower(word_buff, n);
+					}
+					else
+					{
+						starts_consonant(word_buff, firstLetter);
+					}
+				}
+				else
+				{
+					cout << "Error! 2";
+				}
+			}
+
+			else if (n == -1) //no vowels at all
+			{
+				if (isupper(word_buff.at(0)))
+				{
+					if (ispunct(word_buff.back()))
+					{
+						punctuation_upper(word_buff, n);
+					}
+					else
+					{
+						uppercase_start(word_buff, n);
+					}
+				}
+				else if (islower(word_buff.at(0)))
+				{
+					if (ispunct(word_buff.back()))
+					{
+						punctuation_lower(word_buff, n);
+					}
+					else
+					{
+
+						no_vowels_or_start_vowels(word_buff);
+					}
+				}
+				else
+				{
+					cout << "Error! 3";
+				}
+			}
+
+		//}
+		// word_buff = punctuation + word_buff;
 		piglatin.push_back(word_buff);
-		
 	}
 	return piglatin;
 }
 
-void print_translation(vector<string> &piglatin)
+void print_translation(vector<string> &piglatin) //Prints translation.
 {
+	cout << "Here is the translation: ";
 	for (int i = 0; i < piglatin.size(); i++)
 	{
 		cout << piglatin[i] << " ";
@@ -224,18 +239,19 @@ void print_translation(vector<string> &piglatin)
 	system("pause>null");
 }
 
-void user_phrase(bool &run)
+void user_phrase(bool &run) //All the inputs, where the actual program is run from
 {
 	string user_input;
 	int word_counter = 0;
 	vector<string> piglatin;
+	vector<string> non_piglatin;
 	/* each word seperated by a space is saved in the order it was typed
 	and added to the vector: inputs */
 	cout << "Please enter your first phrase: ";
 
 	while (run == true)
 	{
-		
+
 		getline(cin, user_input);
 
 		if (user_input != "opstay")
@@ -246,7 +262,17 @@ void user_phrase(bool &run)
 
 			while (ssUser_input >> word_buff)
 			{
+				non_piglatin.push_back(word_buff);
 				piglatin_translation(piglatin, word_buff);
+				cout << "Your phrase is: ";
+				for (int i = 0; i < non_piglatin.size(); i++)
+				{
+					cout << non_piglatin[i] << " ";
+					
+				}
+				cout << endl;
+				system("pause>null");
+
 			}
 
 			cout << "Please enter your next phrase: ";
@@ -256,11 +282,10 @@ void user_phrase(bool &run)
 		if (user_input == "opstay")
 		{
 			run = false;
-			
-			print_translation(piglatin);
-			system("pause>null");
 
-			
+			print_translation(piglatin);
+
+
 		}
 
 	}
@@ -274,6 +299,6 @@ int main()
 	while (run == true)
 	{
 		user_phrase(run);
-		
+
 	}
 }
